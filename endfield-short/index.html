@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1080">
+<title>Sanctuary of Ink Short</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Chakra+Petch:wght@500;600;700&family=Cormorant+Garamond:ital,wght@1,600;1,700&display=block" rel="stylesheet">
+<style>
+:root{--y:#ffe14d;--ink:#0a0c0f;--paper:#ebe4d2;--w:#f4f1e8;--jade:#5fd3bf;--g:#7d838c;--red:#c8322b}
+*{box-sizing:border-box}
+html,body{margin:0;background:#000}
+#stage{position:relative;width:1080px;height:1920px;overflow:hidden;background:var(--ink);color:var(--w);font-family:'Chakra Petch',system-ui,sans-serif}
+.abs{position:absolute}
+.scene{position:absolute;inset:0;visibility:hidden}
+.anton{font-family:'Anton',Impact,sans-serif;line-height:.92;letter-spacing:1px;white-space:nowrap}
+.serif{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-weight:700;white-space:nowrap}
+.y{color:var(--y)}
+.jade{color:var(--jade)}
+.center{left:0;right:0;text-align:center}
+.nw{white-space:nowrap}
+.tag{font-weight:700;font-size:34px;letter-spacing:6px;color:var(--y)}
+.chip{display:inline-block;background:var(--y);color:#000;font-weight:700;padding:8px 22px;letter-spacing:4px;white-space:nowrap}
+.drop{transform-box:fill-box;transform-origin:center}
+.bracket{position:absolute;width:56px;height:56px;border-color:var(--y);border-style:solid;border-width:0}
+.bracket.tl{left:-2px;top:-2px;border-left-width:6px;border-top-width:6px}
+.bracket.tr{right:-2px;top:-2px;border-right-width:6px;border-top-width:6px}
+.bracket.bl{left:-2px;bottom:-2px;border-left-width:6px;border-bottom-width:6px}
+.bracket.br{right:-2px;bottom:-2px;border-right-width:6px;border-bottom-width:6px}
+.opcard{left:90px;top:440px;width:900px;height:980px;background:linear-gradient(165deg,#173029 0%,#0f1517 55%,#0b0d10 100%);border:2px solid rgba(255,225,77,.28);overflow:visible}
+.opcard .inner{position:absolute;inset:0;overflow:hidden}
+.oplabel{left:44px;top:40px;font-size:30px;font-weight:700;letter-spacing:5px;color:var(--y)}
+.opstatus{right:44px;top:42px;font-size:26px;font-weight:600;letter-spacing:4px;color:var(--g)}
+.opname{left:44px;bottom:120px;transform-origin:left bottom}
+.opchip{left:44px;bottom:52px;transform-origin:left center}
+.opdate{left:390px;bottom:58px;font-size:30px;font-weight:600;letter-spacing:3px;color:var(--w)}
+.row{left:90px;width:900px;height:160px}
+.rowidx{position:absolute;left:0;top:14px;width:132px;height:132px;background:var(--y);color:#000;font-family:'Anton',Impact,sans-serif;font-size:76px;display:flex;align-items:center;justify-content:center}
+.rowtxt{position:absolute;left:168px;top:10px;font-family:'Anton',Impact,sans-serif;font-size:74px;line-height:1;white-space:nowrap}
+.rowsub{position:absolute;left:170px;top:96px;font-size:32px;font-weight:600;color:#b9bec6;letter-spacing:1px;white-space:nowrap}
+.rowbar{position:absolute;left:168px;top:146px;width:600px;height:4px;background:linear-gradient(90deg,var(--y),rgba(255,225,77,0));transform-origin:left center}
+.plat{display:inline-block;border:3px solid rgba(244,241,232,.75);color:var(--w);font-weight:700;font-size:40px;letter-spacing:4px;padding:12px 26px;margin:0 8px}
+.plat.hot{background:var(--y);color:#000;border-color:var(--y)}
+.chev{position:absolute;width:0;height:0;border-left:44px solid transparent;border-right:44px solid transparent;border-top:40px solid var(--y)}
+</style>
+</head>
+<body>
+<div id="stage">
+
+  <!-- shared SVG filters -->
+  <svg width="0" height="0" style="position:absolute">
+    <defs>
+      <filter id="fSplash" x="-30%" y="-30%" width="160%" height="160%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.016" numOctaves="4" seed="11" result="n"/>
+        <feDisplacementMap in="SourceGraphic" in2="n" scale="150" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+      <filter id="fBrush" x="-20%" y="-20%" width="140%" height="140%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="3" seed="4" result="n"/>
+        <feDisplacementMap in="SourceGraphic" in2="n" scale="46" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+      <filter id="fGrain">
+        <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="2"/>
+        <feColorMatrix type="saturate" values="0"/>
+      </filter>
+      <radialGradient id="gJade"><stop offset="0" stop-color="#1f5a52" stop-opacity=".55"/><stop offset="1" stop-color="#1f5a52" stop-opacity="0"/></radialGradient>
+      <radialGradient id="gGold"><stop offset="0" stop-color="#5a4a12" stop-opacity=".35"/><stop offset="1" stop-color="#5a4a12" stop-opacity="0"/></radialGradient>
+    </defs>
+  </svg>
+
+  <!-- ===== background ===== -->
+  <div id="bg" class="abs" style="inset:0">
+    <svg class="abs" width="1080" height="1920" style="left:0;top:0">
+      <circle id="b1" cx="180" cy="420" r="520" fill="url(#gJade)"/>
+      <circle id="b2" cx="960" cy="1250" r="620" fill="url(#gJade)"/>
+      <circle id="b3" cx="620" cy="1800" r="420" fill="url(#gGold)"/>
+    </svg>
+    <div id="grid" class="abs" style="inset:-160px;background-image:linear-gradient(rgba(255,255,255,.045) 2px,transparent 2px),linear-gradient(90deg,rgba(255,255,255,.045) 2px,transparent 2px);background-size:80px 80px"></div>
+    <div id="deco" class="abs anton" style="left:820px;top:0;font-size:330px;color:transparent;-webkit-text-stroke:2px rgba(255,255,255,.07);transform-origin:0 0">ENDFIELD · ENDFIELD · ENDFIELD</div>
+    <canvas id="pc" class="abs" width="1080" height="1920" style="left:0;top:0"></canvas>
+  </div>
+
+  <div id="cam" class="abs" style="inset:0;transform-origin:540px 900px">
+
+    <!-- ===== S1: hook ===== -->
+    <div class="scene" id="s1">
+      <div class="abs tag tw" id="s1tag" data-t0="0.05" data-cps="34" style="left:90px;top:560px">▌INCOMING TRANSMISSION</div>
+      <div class="abs anton glitch" id="s1a" style="left:90px;top:630px;font-size:124px">ENDMINISTRATOR,</div>
+      <div class="abs anton glitch" id="s1b" style="left:90px;top:790px;font-size:250px;transform-origin:left center"><span class="fit" data-w="840">NEW ORDERS</span></div>
+      <div class="abs anton y glitch" id="s1c" style="left:90px;top:1020px;font-size:250px;transform-origin:left center"><span class="fit" data-w="840">INCOMING</span></div>
+      <div class="abs" id="s1line" style="left:90px;top:1272px;width:560px;height:14px;background:var(--y);transform-origin:left center"></div>
+      <div class="abs nw" id="s1sub" style="left:90px;top:1310px;font-size:38px;font-weight:600;letter-spacing:2px;color:#cfd3d9">Arknights: Endfield · new chapter update</div>
+    </div>
+
+    <!-- ===== S2: title on paper ===== -->
+    <div class="scene" id="s2">
+      <div class="abs" style="inset:0;background:radial-gradient(circle at 30% 22%,#f5efdf 0%,#e6dec9 60%,#d3c7aa 100%)"></div>
+      <svg class="abs" width="1080" height="1920" style="left:0;top:0;opacity:.09;mix-blend-mode:multiply"><rect width="1080" height="1920" filter="url(#fGrain)"/></svg>
+      <svg class="abs" width="1080" height="1920" style="left:0;top:0">
+        <g filter="url(#fSplash)" fill="#0b0b0c">
+          <g id="splashMain" style="transform-origin:540px 990px"><ellipse cx="540" cy="990" rx="560" ry="390"/></g>
+          <circle class="drop" cx="150" cy="560" r="46"/>
+          <circle class="drop" cx="930" cy="600" r="30"/>
+          <circle class="drop" cx="990" cy="1430" r="58"/>
+          <circle class="drop" cx="110" cy="1440" r="34"/>
+          <circle class="drop" cx="820" cy="1520" r="22"/>
+          <circle class="drop" cx="260" cy="1540" r="18"/>
+          <circle class="drop" cx="60" cy="760" r="20"/>
+        </g>
+      </svg>
+      <div class="abs center nw" id="s2top" style="top:430px;font-size:54px;font-weight:700;letter-spacing:14px;color:#111">ARKNIGHTS: ENDFIELD</div>
+      <div class="abs center" id="s2chip" style="top:510px"><span class="chip" style="background:#111;color:var(--y);font-size:30px">CORE CHAPTER UPDATE</span></div>
+      <div class="abs center serif" id="s2a" style="top:705px;font-size:230px;line-height:1;color:var(--paper)"><span class="fit" data-w="900">Sanctuary</span></div>
+      <div class="abs center serif" id="s2b" style="top:930px;font-size:250px;line-height:1;color:var(--paper)">of <span class="y">Ink</span></div>
+      <svg class="abs" width="1080" height="1920" style="left:0;top:0">
+        <path id="brush" d="M 250 1235 C 420 1205, 640 1262, 840 1212" fill="none" stroke="#ffe14d" stroke-width="20" stroke-linecap="round" filter="url(#fBrush)"/>
+      </svg>
+      <div class="abs" id="s2seal" style="left:830px;top:1080px;width:130px;height:130px;background:var(--red);color:var(--paper);font-family:'Anton',Impact,sans-serif;font-size:44px;line-height:1;display:flex;align-items:center;justify-content:center;text-align:center;border:5px solid #e8a49f;outline:3px solid var(--red)">NEW<br>CH.</div>
+      <div class="abs center nw" id="s2bottom" style="top:1350px"><span class="chip" style="background:#111;color:var(--paper);font-size:32px;letter-spacing:5px;padding:12px 26px">NEW STORY · NEW REGION · NEW OPERATORS</span></div>
+    </div>
+
+    <!-- ===== S3: date ===== -->
+    <div class="scene" id="s3">
+      <div class="abs center anton" id="s3title" style="top:370px;font-size:104px">MARK YOUR <span class="y">CALENDAR</span></div>
+      <div class="abs" id="s3card" style="left:190px;top:530px;width:700px;height:740px;background:#13161b;border:3px solid #2b313a">
+        <div class="abs anton" style="left:0;right:0;top:0;height:130px;background:var(--y);color:#000;font-size:72px;display:flex;align-items:center;justify-content:center;letter-spacing:6px">OCTOBER 2026</div>
+        <div class="abs" style="left:150px;top:-26px;width:26px;height:64px;background:#2b313a;border-radius:13px"></div>
+        <div class="abs" style="right:150px;top:-26px;width:26px;height:64px;background:#2b313a;border-radius:13px"></div>
+        <div class="abs center anton" id="day" style="top:150px;font-size:440px;line-height:1;color:var(--w)">15</div>
+        <div class="abs center nw" style="bottom:36px;font-size:34px;font-weight:700;letter-spacing:6px;color:var(--y)">SANCTUARY OF INK · LIVE</div>
+      </div>
+      <div class="abs center" id="s3foot" style="top:1320px"><span class="chip" style="font-size:30px">PREVIEW LIVESTREAM · OCT 6 (UTC+8)</span></div>
+      <div class="abs center nw" id="s3live" style="top:1395px;font-size:36px;font-weight:600;color:#cfd3d9">Missed it? Catch the replay on the official channels.</div>
+    </div>
+
+    <!-- ===== S4: operators ===== -->
+    <div class="scene" id="s4">
+      <div class="abs anton" id="s4head" style="left:90px;top:300px;font-size:112px">NEW OPERATORS <span id="s4count" class="y" style="font-size:60px;letter-spacing:4px;vertical-align:middle">01/02</span></div>
+
+      <div class="abs opcard" id="cardSi">
+        <div class="inner">
+          <svg class="abs" width="900" height="980" style="left:0;top:0">
+            <g id="siArt" style="transform-origin:470px 400px">
+              <circle cx="470" cy="400" r="250" fill="none" stroke="#5fd3bf" stroke-width="74" stroke-dasharray="1300 270" stroke-linecap="round" transform="rotate(-70 470 400)" filter="url(#fBrush)" opacity=".9"/>
+              <circle cx="470" cy="400" r="120" fill="#ffe14d" opacity=".9" filter="url(#fBrush)"/>
+              <path d="M 80 690 C 300 610, 560 720, 860 600" stroke="#5fd3bf" stroke-width="22" fill="none" opacity=".45" filter="url(#fBrush)"/>
+              <circle cx="760" cy="170" r="14" fill="#5fd3bf"/><circle cx="800" cy="215" r="8" fill="#5fd3bf"/><circle cx="170" cy="250" r="10" fill="#ffe14d"/>
+            </g>
+          </svg>
+          <div class="abs oplabel tw" data-t0="11.4" data-cps="30">OPERATOR FILE // 01</div>
+          <div class="abs opstatus">STATUS: INCOMING</div>
+          <div class="abs anton opname" id="nameSi" style="font-size:520px">SI</div>
+          <div class="abs opchip" id="chipSi"><span class="chip" style="font-size:30px">NEW OPERATOR</span></div>
+          <div class="abs opdate nw" id="dateSi">ARRIVES OCT 15</div>
+        </div>
+        <div class="bracket tl"></div><div class="bracket tr"></div><div class="bracket bl"></div><div class="bracket br"></div>
+      </div>
+
+      <div class="abs opcard" id="cardYe">
+        <div class="inner">
+          <svg class="abs" width="900" height="980" style="left:0;top:0">
+            <g id="yeArt" style="transform-origin:450px 450px">
+              <circle cx="660" cy="210" r="86" fill="#ffe14d" opacity=".95" filter="url(#fBrush)"/>
+              <path d="M -20 640 L 170 360 L 290 500 L 460 230 L 630 540 L 750 400 L 920 640 Z" fill="#5fd3bf" opacity=".55" filter="url(#fBrush)"/>
+              <path d="M -20 700 L 120 520 L 260 640 L 400 470 L 560 660 L 720 520 L 920 700 Z" fill="#2c7a6e" opacity=".8" filter="url(#fBrush)"/>
+              <path d="M 40 470 C 240 440, 420 500, 620 455" stroke="#f4f1e8" stroke-width="10" fill="none" opacity=".35" filter="url(#fBrush)"/>
+            </g>
+          </svg>
+          <div class="abs oplabel tw" data-t0="14.5" data-cps="30">OPERATOR FILE // 02</div>
+          <div class="abs opstatus">STATUS: INCOMING</div>
+          <div class="abs anton opname" id="nameYe" style="font-size:250px"><span class="fit" data-w="800">YEMINGHE</span></div>
+          <div class="abs opchip" id="chipYe"><span class="chip" style="font-size:30px">NEW OPERATOR</span></div>
+          <div class="abs opdate nw" id="dateYe">ARRIVES OCT 15</div>
+        </div>
+        <div class="bracket tl"></div><div class="bracket tr"></div><div class="bracket bl"></div><div class="bracket br"></div>
+      </div>
+    </div>
+
+    <!-- ===== S5: features ===== -->
+    <div class="scene" id="s5">
+      <div class="abs tag" id="s5tag" style="left:90px;top:330px">▌CHAPTER BRIEFING</div>
+      <div class="abs anton" id="s5head" style="left:90px;top:385px;font-size:112px">WHAT'S <span class="y">INSIDE</span></div>
+      <div class="abs row" style="top:560px"><div class="rowidx">01</div><div class="rowtxt">NEW MAIN STORY</div><div class="rowsub">The saga's next chapter begins</div><div class="rowbar"></div></div>
+      <div class="abs row" style="top:750px"><div class="rowidx">02</div><div class="rowtxt">BRAND-NEW REGION</div><div class="rowsub">Fresh ground to explore</div><div class="rowbar"></div></div>
+      <div class="abs row" style="top:940px"><div class="rowidx">03</div><div class="rowtxt">LIGHTHEARTED MINIGAMES</div><div class="rowsub">Downtime, Endfield style</div><div class="rowbar"></div></div>
+      <div class="abs row" style="top:1130px"><div class="rowidx">04</div><div class="rowtxt">HIGH-DIFFICULTY CONTENT</div><div class="rowsub">For veteran Endministrators</div><div class="rowbar"></div></div>
+    </div>
+
+    <!-- ===== S6: steam ===== -->
+    <div class="scene" id="s6">
+      <div class="abs center tag" id="s6a" style="top:440px;font-size:40px">+ PLUS +</div>
+      <div class="abs center anton" id="s6b" style="top:510px;font-size:150px">OFFICIAL</div>
+      <div class="abs center anton" id="s6c" style="top:660px;font-size:400px;line-height:1">STEAM</div>
+      <div class="abs center" id="s6d" style="top:1080px"><span class="chip anton" style="font-size:120px;padding:6px 40px;letter-spacing:8px;line-height:1.05">DEBUT</span></div>
+      <div class="abs center nw" id="s6date" style="top:1250px;font-size:38px;font-weight:700;letter-spacing:4px;color:#cfd3d9">ARRIVING WITH SANCTUARY OF INK</div>
+      <div class="abs center" style="top:1320px">
+        <span class="plat">PS5</span><span class="plat">PC</span><span class="plat">MOBILE</span><span class="plat hot">STEAM</span>
+      </div>
+    </div>
+
+    <!-- ===== S7: CTA ===== -->
+    <div class="scene" id="s7">
+      <div class="abs anton y" id="s7num" style="left:90px;top:360px;font-size:180px">30,000,000+</div>
+      <div class="abs nw" id="s7lbl" style="left:94px;top:540px;font-size:44px;font-weight:700;letter-spacing:8px">DOWNLOADS WORLDWIDE</div>
+      <div class="abs serif nw" id="s7genre" style="left:94px;top:600px;font-size:60px;color:var(--jade)">a 3D real-time strategy RPG</div>
+      <div class="abs" id="s7cta" style="left:70px;top:730px;width:880px;height:360px;transform-origin:left center">
+        <div id="s7ctaIn" class="abs" style="inset:0;background:var(--y);transform:skewX(-6deg);box-shadow:16px 16px 0 #000, 16px 16px 0 3px var(--y)"></div>
+        <div class="abs anton ctl" style="left:56px;top:36px;font-size:150px;color:#000">DOWNLOAD</div>
+        <div class="abs anton ctl" style="left:58px;top:196px;font-size:118px;color:#000"><span class="fit" data-w="780">ARKNIGHTS: ENDFIELD</span></div>
+      </div>
+      <div class="abs nw" id="s7plat" style="left:94px;top:1150px;font-size:40px;font-weight:700;letter-spacing:3px">AVAILABLE NOW · <span class="y">PS5 · PC · MOBILE</span></div>
+      <div class="abs nw" id="s7date" style="left:94px;top:1210px;font-size:34px;font-weight:600;color:#cfd3d9">Sanctuary of Ink lands Oct 15 — gear up now.</div>
+      <div class="abs" id="s7arrow" style="left:90px;top:1290px;width:700px;height:200px">
+        <div class="abs anton nw" style="left:0;top:0;font-size:72px">TAP THE <span class="y">GAME LINK</span> BELOW</div>
+        <div class="chev" id="c1" style="left:10px;top:90px"></div>
+        <div class="chev" id="c2" style="left:10px;top:125px"></div>
+        <div class="chev" id="c3" style="left:10px;top:160px"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== HUD ===== -->
+  <div id="hud" class="abs" style="inset:0">
+    <div class="abs nw" style="left:90px;top:200px;font-size:26px;font-weight:600;letter-spacing:5px;color:var(--g)"><span id="beat" style="display:inline-block;width:14px;height:14px;background:var(--y);margin-right:14px;vertical-align:middle"></span>AK:EF // FIELD REPORT</div>
+    <div class="abs nw" id="tc" style="right:90px;top:200px;font-size:26px;font-weight:600;letter-spacing:4px;color:var(--g)">T+00.0</div>
+    <div class="abs" style="left:90px;top:250px;width:900px;height:4px;background:rgba(125,131,140,.35)"><div id="prog" style="height:100%;width:0;background:var(--y)"></div></div>
+    <div class="abs" style="left:0;right:0;bottom:0;height:34px;background:repeating-linear-gradient(-45deg,var(--y) 0 26px,#111 26px 52px);opacity:.9"></div>
+  </div>
+
+  <!-- ===== transitions / overlays ===== -->
+  <div id="wipe" class="abs" style="left:0;top:-240px;width:2200px;height:2400px;transform-origin:0 0">
+    <div class="abs" style="left:0;top:0;width:2200px;height:100%;background:var(--y)"></div>
+    <div class="abs" style="left:-90px;top:0;width:40px;height:100%;background:var(--y)"></div>
+    <div class="abs" style="left:2200px;top:0;width:60px;height:100%;background:#000"></div>
+  </div>
+  <div class="abs" style="inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 45%,transparent 55%,rgba(0,0,0,.5) 100%)"></div>
+  <div id="flash" class="abs" style="inset:0;background:#fff;opacity:0"></div>
+</div>
+
+<script>
+const FPS = 30, DUR = 30;
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const hash = n => { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+function mulberry32(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+const E = {
+  lin: p => p,
+  outExpo: p => p === 1 ? 1 : 1 - Math.pow(2, -10 * p),
+  outCubic: p => 1 - Math.pow(1 - p, 3),
+  inCubic: p => p * p * p,
+  inOut: p => p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2,
+  outBack: p => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(p - 1, 3) + c1 * Math.pow(p - 1, 2); },
+};
+
+// ---- keyframe tracks: A(selector, start, duration, from, to, ease, stagger)
+const tracks = new Map();
+const DEF = { x: 0, y: 0, s: 1, sx: 1, o: 1, r: 0, b: 0, sk: 0 };
+function A(sel, t0, dur, from, to, ease = 'outExpo', stagger = 0) {
+  $$(sel).forEach((el, i) => {
+    if (!tracks.has(el)) tracks.set(el, []);
+    tracks.get(el).push({ t0: t0 + i * stagger, t1: t0 + i * stagger + dur, from, to, ease: E[ease] });
+  });
+}
+function applyTracks(t) {
+  for (const [el, list] of tracks) {
+    const v = { ...DEF };
+    const props = new Set();
+    list.forEach(k => Object.keys(k.to).forEach(p => props.add(p)));
+    for (const p of props) {
+      let first = null, last = null;
+      for (const k of list) { if (!(p in k.to)) continue; if (!first) first = k; if (t >= k.t0) last = k; }
+      if (!last) { v[p] = first.from[p] ?? DEF[p]; continue; }
+      const q = clamp((t - last.t0) / (last.t1 - last.t0));
+      const f = last.from[p] ?? DEF[p];
+      v[p] = f + (last.to[p] - f) * last.ease(q);
+    }
+    el.style.transform = `translate(${v.x}px,${v.y}px) scale(${v.s * v.sx},${v.s}) rotate(${v.r}deg) skewX(${v.sk}deg)`;
+    el.style.opacity = v.o;
+    el.style.filter = v.b > 0.05 ? `blur(${v.b}px)` : '';
+  }
+}
+
+const SCENES = [['#s1', 0, 3], ['#s2', 3, 7], ['#s3', 7, 11], ['#s4', 11, 17.5], ['#s5', 17.5, 22], ['#s6', 22, 25], ['#s7', 25, 30.01]]
+  .map(([s, a, b]) => ({ el: $(s), a, b }));
+const CUTS = [3, 7, 11, 17.5, 22, 25];
+const SHAKES = [[3, 10], [4.95, 16], [7, 10], [8.6, 18], [11, 10], [11.6, 20], [14.25, 12], [14.7, 18], [17.5, 10], [22, 10], [22.6, 26], [25, 10], [26.7, 18]];
+const FLASHES = [[3.0, .5], [22.55, .45], [26.65, .25]];
+
+function build() {
+  // S1 hook
+  A('#s1tag', 0, .25, { o: 0 }, { o: 1 }, 'lin');
+  A('#s1a', .25, .6, { x: -140, o: 0, b: 14 }, { x: 0, o: 1, b: 0 });
+  A('#s1b', .75, .55, { s: 1.5, o: 0, b: 12 }, { s: 1, o: 1, b: 0 });
+  A('#s1c', 1.25, .55, { s: 1.5, o: 0, b: 12 }, { s: 1, o: 1, b: 0 });
+  A('#s1line', 1.65, .6, { sx: 0 }, { sx: 1 });
+  A('#s1sub', 1.9, .6, { y: 30, o: 0 }, { y: 0, o: 1 });
+  // S2 title
+  A('#splashMain', 3.0, .75, { s: .04 }, { s: 1 });
+  A('#splashMain', 3.75, 3.25, { s: 1 }, { s: 1.06 }, 'lin');
+  A('#s2 .drop', 3.15, .45, { s: 0 }, { s: 1 }, 'outBack', .05);
+  A('#s2top', 3.3, .6, { y: -40, o: 0 }, { y: 0, o: 1 });
+  A('#s2chip', 3.5, .5, { sx: 0 }, { sx: 1 });
+  A('#s2a', 3.55, .9, { o: 0, b: 26, s: 1.15 }, { o: 1, b: 0, s: 1 });
+  A('#s2b', 3.85, .9, { o: 0, b: 26, y: 40 }, { o: 1, b: 0, y: 0 });
+  A('#s2seal', 4.9, .35, { s: 2.6, o: 0, r: -30 }, { s: 1, o: 1, r: -8 }, 'outBack');
+  A('#s2bottom', 5.2, .6, { y: 30, o: 0 }, { y: 0, o: 1 });
+  // S3 date
+  A('#s3title', 7.1, .6, { x: -100, o: 0 }, { x: 0, o: 1 });
+  A('#s3card', 7.2, .7, { y: 180, o: 0, r: 5 }, { y: 0, o: 1, r: 0 }, 'outBack');
+  A('#day', 8.6, .4, { s: 1.3 }, { s: 1 }, 'outBack');
+  A('#s3foot', 9.0, .5, { y: 30, o: 0 }, { y: 0, o: 1 });
+  A('#s3live', 9.3, .5, { y: 30, o: 0 }, { y: 0, o: 1 });
+  // S4 operators
+  A('#s4head', 11.05, .5, { y: -40, o: 0 }, { y: 0, o: 1 });
+  A('#cardSi', 11.1, .7, { x: 1000, o: 0 }, { x: 0, o: 1 });
+  A('#cardSi', 14.0, .45, { x: 0 }, { x: -1100 }, 'inCubic');
+  A('#siArt', 11.2, 1.2, { s: .6, o: 0, r: -40 }, { s: 1, o: 1, r: 0 });
+  A('#siArt', 12.4, 2.0, { r: 0 }, { r: 14 }, 'lin');
+  A('#nameSi', 11.5, .55, { s: 1.6, o: 0, b: 16 }, { s: 1, o: 1, b: 0 });
+  A('#chipSi', 12.0, .4, { sx: 0 }, { sx: 1 });
+  A('#dateSi', 12.3, .5, { x: -30, o: 0 }, { x: 0, o: 1 });
+  A('#cardYe', 14.15, .6, { x: 1100 }, { x: 0 });
+  A('#yeArt', 14.3, 1.2, { s: 1.25, o: 0, y: 60 }, { s: 1, o: 1, y: 0 });
+  A('#yeArt', 15.5, 2.0, { s: 1 }, { s: 1.05 }, 'lin');
+  A('#nameYe', 14.6, .55, { s: 1.6, o: 0, b: 16 }, { s: 1, o: 1, b: 0 });
+  A('#chipYe', 15.1, .4, { sx: 0 }, { sx: 1 });
+  A('#dateYe', 15.4, .5, { x: -30, o: 0 }, { x: 0, o: 1 });
+  // S5 features
+  A('#s5tag', 17.55, .4, { o: 0 }, { o: 1 }, 'lin');
+  A('#s5head', 17.6, .5, { x: -100, o: 0 }, { x: 0, o: 1 });
+  A('#s5 .row', 17.95, .55, { x: -220, o: 0 }, { x: 0, o: 1 }, 'outExpo', .5);
+  A('#s5 .rowidx', 18.0, .45, { s: 0, r: -90 }, { s: 1, r: 0 }, 'outBack', .5);
+  A('#s5 .rowbar', 18.2, .8, { sx: 0 }, { sx: 1 }, 'outCubic', .5);
+  // S6 steam
+  A('#s6a', 22.05, .4, { y: -30, o: 0 }, { y: 0, o: 1 });
+  A('#s6b', 22.2, .5, { x: -140, o: 0 }, { x: 0, o: 1 });
+  A('#s6c', 22.45, .55, { s: 2.3, o: 0, b: 22 }, { s: 1, o: 1, b: 0 });
+  A('#s6d', 22.85, .45, { sx: 0 }, { sx: 1 }, 'outBack');
+  A('#s6date', 23.2, .5, { y: 30, o: 0 }, { y: 0, o: 1 });
+  A('#s6 .plat', 23.45, .45, { y: 50, o: 0 }, { y: 0, o: 1 }, 'outBack', .12);
+  // S7 CTA
+  A('#s7num', 25.1, .5, { y: 40, o: 0 }, { y: 0, o: 1 });
+  A('#s7lbl', 25.45, .5, { x: -40, o: 0 }, { x: 0, o: 1 });
+  A('#s7genre', 25.75, .6, { x: -40, o: 0 }, { x: 0, o: 1 });
+  A('#s7cta', 26.3, .5, { sx: 0 }, { sx: 1 });
+  A('#s7cta .ctl', 26.55, .45, { x: -60, o: 0 }, { x: 0, o: 1 }, 'outExpo', .12);
+  A('#s7plat', 27.1, .5, { y: 30, o: 0 }, { y: 0, o: 1 });
+  A('#s7date', 27.3, .5, { y: 30, o: 0 }, { y: 0, o: 1 });
+  A('#s7arrow', 27.6, .5, { y: -30, o: 0 }, { y: 0, o: 1 });
+}
+
+// ---- procedural bits
+const rnd = mulberry32(20261015);
+const P = Array.from({ length: 95 }, () => ({
+  x: rnd() * 1080, y: rnd() * 1960, v: 12 + rnd() * 50, r: 1.5 + rnd() * 4.5,
+  ph: rnd() * 6.28, f: .3 + rnd() * .8, c: rnd() < .18 ? '255,225,77' : (rnd() < .6 ? '95,211,191' : '244,241,232'), a: .15 + rnd() * .45,
+}));
+const ctx = $('#pc').getContext('2d');
+function particles(t) {
+  ctx.clearRect(0, 0, 1080, 1920);
+  for (const p of P) {
+    const y = ((p.y - p.v * t) % 1960 + 1960) % 1960 - 20;
+    const x = p.x + Math.sin(t * p.f + p.ph) * 24;
+    ctx.fillStyle = `rgba(${p.c},${p.a})`;
+    ctx.beginPath(); ctx.arc(x, y, p.r, 0, 6.2832); ctx.fill();
+  }
+}
+
+let brushLen = 0;
+function init() {
+  $$('.fit').forEach(el => {
+    const max = +el.dataset.w;
+    let fs = parseFloat(getComputedStyle(el.parentElement).fontSize);
+    el.style.display = 'inline-block';
+    while (el.getBoundingClientRect().width > max && fs > 20) { fs -= 2; el.parentElement.style.fontSize = fs + 'px'; }
+  });
+  $$('.tw').forEach(el => el.dataset.full = el.textContent);
+  brushLen = $('#brush').getTotalLength();
+  $('#brush').style.strokeDasharray = brushLen;
+  build();
+}
+
+const fmt = n => Math.round(n).toLocaleString('en-US');
+function render(t) {
+  for (const s of SCENES) s.el.style.visibility = (t >= s.a && t < s.b) ? 'visible' : 'hidden';
+  applyTracks(t);
+
+  // background motion
+  $('#grid').style.transform = `translate(${-(t * 14) % 80}px,${-(t * 36) % 80}px)`;
+  $('#deco').style.transform = `translate(0px,${-200 - t * 40}px) rotate(90deg) translate(0,-330px)`;
+  $('#b1').setAttribute('cx', 180 + Math.sin(t * .35) * 90);
+  $('#b2').setAttribute('cy', 1250 + Math.cos(t * .28) * 120);
+  $('#b3').setAttribute('cx', 620 + Math.sin(t * .22 + 1) * 140);
+  particles(t);
+
+  // typewriters
+  $$('.tw').forEach(el => {
+    const full = el.dataset.full, t0 = +el.dataset.t0, cps = +el.dataset.cps;
+    const n = Math.floor(clamp((t - t0) * cps, 0, full.length));
+    el.textContent = full.slice(0, n) + (n < full.length && t >= t0 ? '█' : '');
+  });
+
+  // glitch on hook
+  const g = [[0.75, .95], [1.25, 1.45], [2.6, 2.75]].some(([a, b]) => t >= a && t < b);
+  const fr = Math.round(t * FPS);
+  $$('.glitch').forEach((el, i) => {
+    if (g) {
+      el.style.translate = `${(hash(fr * 7 + i) - .5) * 44}px 0`;
+      el.style.textShadow = `${-8 - hash(fr + i) * 6}px 0 rgba(255,42,85,.85), ${8 + hash(fr * 3 + i) * 6}px 0 rgba(42,240,255,.85)`;
+    } else { el.style.translate = '0 0'; el.style.textShadow = 'none'; }
+  });
+
+  // brush underline
+  $('#brush').style.strokeDashoffset = brushLen * (1 - E.outCubic(clamp((t - 4.4) / .6)));
+
+  // counters
+  $('#day').textContent = String(Math.max(1, Math.round(1 + 14 * E.outCubic(clamp((t - 7.5) / 1.1))))).padStart(2, '0');
+  $('#s7num').textContent = fmt(30000000 * E.outExpo(clamp((t - 25.2) / 1.4))) + '+';
+  $('#s4count').textContent = t < 14.25 ? '01/02' : '02/02';
+
+  // CTA pulse + chevrons
+  const pulse = t > 27.5 ? 1 + .025 * Math.exp(-9 * (t % .5)) : 1;
+  $('#s7ctaIn').style.scale = pulse;
+  ['#c1', '#c2', '#c3'].forEach((s, i) => { $(s).style.opacity = .25 + .75 * Math.pow(.5 + .5 * Math.sin(t * 8 - i * 1.2), 2); });
+
+  // wipes
+  let wx = 3000;
+  for (const c of CUTS) {
+    const p = (t - (c - .25)) / .5;
+    if (p >= 0 && p <= 1) wx = -2900 + 4680 * E.inOut(p);
+  }
+  $('#wipe').style.transform = `translate(${wx}px,0) skewX(-18deg)`;
+
+  // camera: slow push per scene + impact shakes
+  const sc = SCENES.find(s => t >= s.a && t < s.b) || SCENES[SCENES.length - 1];
+  const z = 1 + .035 * clamp((t - sc.a) / (sc.b - sc.a));
+  let sx = 0, sy = 0;
+  for (const [c, amp] of SHAKES) {
+    if (t >= c && t < c + .5) {
+      const k = amp * Math.exp(-(t - c) * 10);
+      sx += (hash(fr * 13.1 + c) - .5) * 2 * k; sy += (hash(fr * 7.7 + c * 3) - .5) * 2 * k;
+    }
+  }
+  $('#cam').style.transform = `translate(${sx}px,${sy}px) scale(${z})`;
+  let fl = 0;
+  for (const [c, a] of FLASHES) if (t >= c && t < c + .4) fl = Math.max(fl, a * Math.exp(-(t - c) * 12));
+  $('#flash').style.opacity = fl;
+
+  // HUD
+  $('#beat').style.opacity = .3 + .7 * Math.exp(-10 * (t % .5));
+  $('#tc').textContent = 'T+' + t.toFixed(1).padStart(4, '0');
+  $('#prog').style.width = (100 * clamp(t / DUR)) + '%';
+}
+
+window.render = render;
+window.__ready = (async () => {
+  try { await document.fonts.ready; } catch (e) {}
+  init();
+  render(0);
+  return true;
+})();
+
+// live preview when opened in a browser (?t=12.3 freezes on a frame)
+const qs = new URLSearchParams(location.search);
+if (!navigator.webdriver) {
+  window.__ready.then(() => {
+    if (qs.has('t')) { render(+qs.get('t')); return; }
+    const start = performance.now();
+    const loop = () => { render(((performance.now() - start) / 1000) % DUR); requestAnimationFrame(loop); };
+    requestAnimationFrame(loop);
+  });
+}
+</script>
+</body>
+</html>
