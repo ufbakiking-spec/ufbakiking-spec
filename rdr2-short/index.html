@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1080">
+<title>RDR2 Next-Gen Short</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Rye&family=Special+Elite&family=Montserrat:wght@600;800;900&display=block" rel="stylesheet">
+<style>
+:root{--red:#c4161c;--gold:#f2b84b;--bone:#efe6d2;--ink:#120d0b;--neon:#ff4fa0}
+*{box-sizing:border-box}
+html,body{margin:0;background:#000}
+body.overlay,body.overlay #stage{background:transparent}
+#stage{position:relative;width:1080px;height:1920px;overflow:hidden;background:#000;color:var(--bone);font-family:'Montserrat',system-ui,sans-serif}
+.abs{position:absolute}
+#cam{position:absolute;inset:0;transform-origin:540px 800px}
+#world,#dust{position:absolute;left:0;top:0;width:1080px;height:1920px}
+body.overlay #world,body.overlay #dust{display:none}
+#shade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,0) 22%,rgba(0,0,0,0) 52%,rgba(0,0,0,.55) 74%,rgba(0,0,0,.2))}
+body.overlay #shade{background:linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.25) 25%,rgba(0,0,0,.2) 50%,rgba(0,0,0,.65) 72%,rgba(0,0,0,.3))}
+.scene{position:absolute;left:0;top:250px;width:1080px;height:900px;display:flex;flex-direction:column;align-items:center;justify-content:center;visibility:hidden;text-align:center}
+.anton{font-family:'Anton',Impact,sans-serif;line-height:.95;letter-spacing:1px;white-space:nowrap;text-transform:uppercase}
+.rye{font-family:'Rye',serif;white-space:nowrap}
+.elite{font-family:'Special Elite',monospace}
+.tag{font-weight:800;font-size:30px;letter-spacing:8px;color:var(--gold);text-transform:uppercase;white-space:nowrap}
+.chip{display:inline-block;background:var(--red);color:#fff;font-weight:900;font-size:34px;padding:10px 26px;letter-spacing:5px;white-space:nowrap;text-transform:uppercase}
+.chip.gold{background:var(--gold);color:#1a0f08}
+.sh{text-shadow:0 6px 0 rgba(0,0,0,.55),0 0 40px rgba(0,0,0,.6)}
+.stamp{display:inline-block;border:8px solid var(--red);color:var(--red);font-family:'Anton',Impact,sans-serif;font-size:96px;padding:6px 30px;letter-spacing:6px;line-height:1;background:rgba(18,13,11,.35);white-space:nowrap}
+.panel{background:rgba(14,10,9,.78);border:3px solid rgba(242,184,75,.55);box-shadow:0 30px 80px rgba(0,0,0,.6)}
+/* hook */
+#ring{width:640px;height:640px;position:absolute;left:220px;top:205px}
+#h8{font-size:470px;color:var(--bone);margin-top:-30px}
+#h8lbl{font-size:96px;color:var(--gold);margin-top:-6px}
+/* fps */
+#fpsNum{font-size:400px;color:var(--red);line-height:.85}
+#fpsLbl{font-size:110px;margin-top:-10px}
+#graph{width:860px;height:150px;margin-top:40px}
+/* wanted */
+#poster{width:780px;height:900px;background:radial-gradient(ellipse at 50% 40%,#f1e3c2 0%,#e2cc9c 60%,#b9945e 100%);color:#2a1a10;padding:50px 50px;box-shadow:0 40px 90px rgba(0,0,0,.7),inset 0 0 90px rgba(90,50,20,.55);display:flex;flex-direction:column;align-items:center}
+#poster .w1{font-family:'Rye',serif;font-size:150px;line-height:1;letter-spacing:6px}
+#poster .rule{width:100%;height:6px;background:#2a1a10;margin:16px 0}
+#poster .w2{font-family:'Anton',Impact,sans-serif;font-size:116px;line-height:1;text-transform:uppercase}
+#poster .w3{font-family:'Rye',serif;font-size:52px;margin-top:20px}
+#poster .q{font-family:'Anton',Impact,sans-serif;font-size:250px;line-height:.9;color:#7a1410}
+#poster .w4{font-family:'Special Elite',monospace;font-size:38px;margin-top:10px}
+/* rdr1 */
+.tiles{display:flex;gap:28px;margin-top:46px}
+.tile{width:270px;height:250px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.tile .big{font-family:'Anton',Impact,sans-serif;font-size:118px;color:var(--gold);line-height:1}
+.tile .sm{font-weight:800;font-size:26px;letter-spacing:4px;margin-top:8px;color:#d9cdb3}
+/* silence */
+#arthur{font-size:150px}
+#dots{font-family:'Anton',Impact,sans-serif;font-size:300px;color:var(--bone);line-height:.6;letter-spacing:30px}
+#weed{position:absolute;left:0;top:640px;width:170px;height:170px}
+/* dossier */
+.dossier{width:900px;padding:44px 54px;text-align:left;background:linear-gradient(170deg,#e9dcc0,#d4c19a);color:#231812;box-shadow:0 40px 90px rgba(0,0,0,.7);position:relative}
+.dossier .hd{display:flex;justify-content:space-between;align-items:center;font-family:'Special Elite',monospace;font-size:34px;letter-spacing:3px;border-bottom:4px solid #231812;padding-bottom:16px}
+.dossier .nm{font-family:'Anton',Impact,sans-serif;font-size:128px;line-height:1;margin:26px 0 18px;text-transform:uppercase}
+.dossier .ln{font-family:'Special Elite',monospace;font-size:46px;line-height:1.5;white-space:nowrap}
+.dossier .ln b{color:#8c1410;font-weight:400}
+.clip{position:absolute;right:330px;top:-26px;width:60px;height:120px;border:8px solid #9aa0a6;border-radius:30px;border-bottom-color:transparent}
+#tlbar{position:relative;width:640px;height:16px;background:rgba(35,24,18,.25);margin:44px 60px 80px}
+#tlfill{position:absolute;left:0;top:0;height:16px;background:#8c1410;width:0}
+#tlpin{position:absolute;top:-26px;width:68px;height:68px;margin-left:-34px;border-radius:50%;background:#8c1410;border:6px solid #e9dcc0}
+.tlyr{position:absolute;top:56px;font-family:'Anton',Impact,sans-serif;font-size:58px;transform:translateX(-50%)}
+/* ready */
+#bar{width:860px;height:90px;border:5px solid var(--bone);padding:8px;margin:30px 0 26px}
+#barIn{height:100%;width:0;background:repeating-linear-gradient(-45deg,var(--gold) 0 26px,#d99a2b 26px 52px)}
+#pct{font-size:190px;color:var(--gold)}
+/* gta */
+#why{font-size:150px}
+#gta{font-size:330px;background:linear-gradient(180deg,#ffd76a 0%,#ff7a59 40%,#ff3fa4 75%,#9b4dff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 30px rgba(255,79,160,.65)) drop-shadow(0 8px 0 rgba(0,0,0,.5));line-height:.9;padding:0 20px}
+#beam{position:absolute;left:190px;top:-250px;width:700px;height:1150px;background:linear-gradient(rgba(255,240,200,.0),rgba(255,236,190,.22) 60%,rgba(255,236,190,.0));clip-path:polygon(44% 0,56% 0,100% 100%,0 100%);transform-origin:50% 0}
+/* rdo */
+#x4{font-size:360px;color:#ff8a1c;line-height:.85;text-shadow:0 0 50px rgba(255,120,20,.55),0 8px 0 rgba(0,0,0,.5)}
+/* cta */
+.vote{display:flex;gap:40px;margin-top:50px}
+.btn{width:330px;height:150px;display:flex;align-items:center;justify-content:center;font-family:'Anton',Impact,sans-serif;font-size:96px;letter-spacing:4px}
+#yes{background:#2f8f3a;color:#fff}#no{background:var(--red);color:#fff}
+/* captions */
+#cap{position:absolute;left:90px;width:900px;top:1210px;height:220px;display:flex;align-items:center;justify-content:center;text-align:center}
+#capIn{max-width:900px;font-family:'Montserrat',sans-serif;font-weight:900;text-transform:uppercase;line-height:1.1;color:#fff;-webkit-text-stroke:14px #000;paint-order:stroke fill;letter-spacing:1px}
+#capIn span{display:inline-block}
+#capIn span.on{color:var(--gold)}
+#capIn span.key{color:#ff3b3b}
+/* hud */
+#tagTop{position:absolute;left:60px;top:170px;display:flex;align-items:center;gap:16px}
+#live{width:22px;height:22px;border-radius:50%;background:var(--red);box-shadow:0 0 18px var(--red)}
+#prog{position:absolute;left:0;top:0;height:10px;background:var(--red);width:0}
+#grain{position:absolute;inset:0;width:1080px;height:1920px;opacity:.09;mix-blend-mode:overlay}
+#vig{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 45%,rgba(0,0,0,0) 55%,rgba(0,0,0,.55) 100%)}
+body.overlay #vig{opacity:.6}
+#flash{position:absolute;inset:0;background:#fff;opacity:0}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="cam">
+    <svg id="world" viewBox="0 0 1080 1920">
+      <defs>
+        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+          <stop id="sk0" offset="0"/><stop id="sk1" offset=".55"/><stop id="sk2" offset=".78"/>
+        </linearGradient>
+        <radialGradient id="glow"><stop offset="0" stop-color="#fff2c8" stop-opacity=".9"/><stop offset=".25" stop-color="#ffb35a" stop-opacity=".45"/><stop offset="1" stop-color="#ff7a3a" stop-opacity="0"/></radialGradient>
+        <radialGradient id="mglow"><stop offset="0" stop-color="#fff" stop-opacity=".5"/><stop offset="1" stop-color="#9fb4ff" stop-opacity="0"/></radialGradient>
+      </defs>
+      <rect width="1080" height="1920" fill="url(#sky)"/>
+      <g id="stars"></g>
+      <circle id="moonGlow" cx="950" cy="1150" r="200" fill="url(#mglow)"/>
+      <circle id="moon" cx="950" cy="1150" r="52" fill="#f3ecd8"/>
+      <circle id="sunGlow" cx="540" cy="1080" r="520" fill="url(#glow)"/>
+      <circle id="sun" cx="540" cy="1080" r="120" fill="#ffd98a"/>
+      <g id="far"><path id="farP"/></g>
+      <g id="mid"><path id="midP"/></g>
+      <g id="rider" transform="translate(560,1335) scale(1.6)">
+        <path id="riderP" d="M40 92 Q60 70 100 70 Q128 70 140 64 L160 36 L172 30 L190 46 L186 54 L172 50 L158 80 Q150 100 128 102 L128 140 L121 140 L118 106 L84 106 L74 140 L67 140 L66 104 Q52 102 46 96 Q30 108 22 130 L16 128 Q24 100 40 92 Z M92 70 L96 34 L112 34 L114 70 Z M104 70 L100 96 L108 96 L112 70 Z M88 22 L120 22 L120 26 L88 26 Z M95 8 L113 8 L114 23 L94 23 Z M104 28 a6 6 0 1 0 0.1 0Z"/>
+      </g>
+      <g id="near"><path id="nearP"/></g>
+      <g id="poles"></g>
+      <g id="cacti"></g>
+    </svg>
+    <canvas id="dust" width="1080" height="1920"></canvas>
+    <div id="shade"></div>
+
+    <!-- 1 hook -->
+    <div class="scene" id="s_hook">
+      <svg id="ring" viewBox="-100 -100 200 200"><g id="cyl" fill="none" stroke="rgba(242,184,75,.55)" stroke-width="3"><circle r="92"/><circle r="30"/></g></svg>
+      <div class="tag" id="hTag">Oct 26, 2018 &nbsp;→&nbsp; Oct 26, 2026</div>
+      <div class="anton sh" id="h8">8</div>
+      <div class="anton sh" id="h8lbl">Years Old</div>
+    </div>
+    <!-- 2 fps -->
+    <div class="scene" id="s_fps">
+      <div class="tag" id="fTag">PS5 &nbsp;•&nbsp; Xbox Series X</div>
+      <div class="anton sh" id="fpsNum">30</div>
+      <div class="anton sh" id="fpsLbl">FPS</div>
+      <svg id="graph" viewBox="0 0 860 150"><polyline id="gline" fill="none" stroke="#c4161c" stroke-width="7" stroke-linejoin="round"/><line x1="0" y1="75" x2="860" y2="75" stroke="rgba(239,230,210,.25)" stroke-dasharray="10 10" stroke-width="3"/></svg>
+      <div style="margin-top:-460px;height:0"><div class="stamp" id="fStill">STILL</div></div>
+    </div>
+    <!-- 3 wanted -->
+    <div class="scene" id="s_title">
+      <div id="poster">
+        <div class="w1">WANTED</div>
+        <div class="rule"></div>
+        <div class="w2" id="pName">RDR2 Next-Gen</div>
+        <div class="w3">Upgrade</div>
+        <div class="q" id="pQ">?</div>
+        <div class="w4" id="pW4">LAST SEEN: NEVER</div>
+        <div class="rule"></div>
+        <div class="w3" style="margin-top:6px">Here's what we know</div>
+      </div>
+    </div>
+    <!-- 4 rdr1 -->
+    <div class="scene" id="s_rdr1">
+      <div class="chip" id="rChip">Dec 2025</div>
+      <div class="rye sh" id="rT1" style="font-size:84px;margin-top:34px">Red Dead</div>
+      <div class="rye sh" id="rT2" style="font-size:84px">Redemption</div>
+      <div class="tag" id="rT3" style="margin-top:16px;color:var(--bone)">The original &nbsp;•&nbsp; current-gen</div>
+      <div class="tiles">
+        <div class="tile panel" id="tl60"><div class="big">60</div><div class="sm">FPS</div></div>
+        <div class="tile panel" id="tl4k"><div class="big">4K</div><div class="sm">RESOLUTION</div></div>
+        <div class="tile panel" id="tlhdr"><div class="big">HDR</div><div class="sm">SUPPORT</div></div>
+      </div>
+    </div>
+    <!-- 5 silence -->
+    <div class="scene" id="s_silence">
+      <div class="tag" id="sTag">Fans expected</div>
+      <div class="rye sh" id="arthur">Arthur</div>
+      <div class="anton sh" id="sNext" style="font-size:130px;color:var(--gold)">Next?</div>
+      <div id="dots">...</div>
+      <svg id="weed" viewBox="-50 -50 100 100"><g fill="none" stroke="#8a6a44" stroke-width="2.4" id="weedG"></g></svg>
+    </div>
+    <!-- 6 nate -->
+    <div class="scene" id="s_nate">
+      <div class="dossier" id="dNate"><div class="clip"></div>
+        <div class="hd"><span>INSIDER FILE #01</span><span>CLASSIFIED</span></div>
+        <div class="nm">NateTheHate</div>
+        <div class="ln" id="n1">✔ Upgrade: <b>REAL</b></div>
+        <div class="ln" id="n2">✔ Planned: <b>2026</b></div>
+        <div class="ln" id="n3">✖ Release date: <b class="tw" data-key="n3">NO UPDATE</b></div>
+      </div>
+    </div>
+    <!-- 7 kiwi -->
+    <div class="scene" id="s_kiwi">
+      <div class="dossier" id="dKiwi"><div class="clip"></div>
+        <div class="hd"><span>INSIDER FILE #02</span><span>CLASSIFIED</span></div>
+        <div class="nm">Kiwi Talkz</div>
+        <div class="ln">Claim: <b>could slip to…</b></div>
+        <div id="tlbar"><div id="tlfill"></div><div id="tlpin"></div>
+          <div class="tlyr" style="left:0">2026</div><div class="tlyr" style="left:640px;color:#8c1410" id="y27">LATE 2027</div></div>
+      </div>
+    </div>
+    <!-- 8 ready -->
+    <div class="scene" id="s_ready">
+      <div class="tag" id="rdTag">June report &nbsp;•&nbsp; build status</div>
+      <div class="anton sh" id="pct">0%</div>
+      <div id="bar"><div id="barIn"></div></div>
+      <div class="anton sh" id="rdFin" style="font-size:96px">Finished?</div>
+      <div style="height:0;margin-top:-300px"><div class="stamp" id="rdHold" style="font-size:120px">ON HOLD</div></div>
+    </div>
+    <!-- 9 gta -->
+    <div class="scene" id="s_gta">
+      <div id="beam"></div>
+      <div class="anton sh" id="why">Why?</div>
+      <div class="anton" id="gta">GTA VI</div>
+      <div class="chip gold" id="gChip" style="font-size:44px;margin-top:20px">Launches Nov 2026</div>
+      <div class="tag" id="gTag" style="margin-top:40px;color:var(--bone)">Nothing steals the spotlight</div>
+    </div>
+    <!-- 10 rdo -->
+    <div class="scene" id="s_rdo">
+      <div class="tag" id="oTag" style="color:#ff8a1c">Meanwhile in Red Dead Online</div>
+      <div class="rye sh" id="oT" style="font-size:110px;margin-top:20px">Halloween</div>
+      <div class="chip" id="oChip" style="background:#ff8a1c;color:#1a0b02;margin-top:22px">Live until Nov 2</div>
+      <div class="anton" id="x4" style="margin-top:30px">4X</div>
+      <div class="anton sh" id="oSub" style="font-size:62px;margin-top:6px">Strange Tales of the West</div>
+    </div>
+    <!-- 11 cta -->
+    <div class="scene" id="s_cta">
+      <div class="tag" id="cTag">RDR2 at 60 FPS</div>
+      <div class="anton sh" id="cQ" style="font-size:118px;margin-top:20px">Would you<br>buy it again?</div>
+      <div class="vote"><div class="btn" id="yes">YES</div><div class="btn" id="no">NO</div></div>
+      <div class="anton sh" id="cCom" style="font-size:66px;margin-top:46px;color:var(--gold)">Comment below ↓</div>
+    </div>
+
+    <div id="cap"><div id="capIn"></div></div>
+  </div>
+  <div id="tagTop"><div id="live"></div><div class="tag" style="color:#fff;font-size:28px">RDR2 NEWS</div><div class="tag" style="font-size:28px;color:var(--gold)">• OCT 2026</div></div>
+  <canvas id="grain" width="540" height="960"></canvas>
+  <div id="vig"></div>
+  <div id="prog"></div>
+  <div id="flash"></div>
+</div>
+
+<script src="out/timeline.js"></script>
+<script>
+const TL = window.TL, DUR = TL.dur, FPS = 30;
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const hash = n => { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+function mulberry32(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+if (new URLSearchParams(location.search).has('overlay')) document.body.classList.add('overlay');
+
+const E = {
+  lin: p => p,
+  outExpo: p => p === 1 ? 1 : 1 - Math.pow(2, -10 * p),
+  outCubic: p => 1 - Math.pow(1 - p, 3),
+  inCubic: p => p * p * p,
+  inOut: p => p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2,
+  outBack: p => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(p - 1, 3) + c1 * Math.pow(p - 1, 2); },
+};
+
+// ---- keyframe tracks: A(selector, start, duration, from, to, ease, stagger)
+const tracks = new Map();
+const DEF = { x: 0, y: 0, s: 1, sx: 1, o: 1, r: 0, b: 0 };
+function A(sel, t0, dur, from, to, ease = 'outExpo', stagger = 0) {
+  $$(sel).forEach((el, i) => {
+    if (!tracks.has(el)) tracks.set(el, []);
+    tracks.get(el).push({ t0: t0 + i * stagger, t1: t0 + i * stagger + dur, from, to, ease: E[ease] });
+  });
+}
+function applyTracks(t) {
+  for (const [el, list] of tracks) {
+    const v = { ...DEF }, props = new Set();
+    list.forEach(k => Object.keys(k.to).forEach(p => props.add(p)));
+    for (const p of props) {
+      let first = null, last = null;
+      for (const k of list) { if (!(p in k.to)) continue; if (!first) first = k; if (t >= k.t0) last = k; }
+      if (!last) { v[p] = first.from[p] ?? DEF[p]; continue; }
+      const q = clamp((t - last.t0) / (last.t1 - last.t0));
+      const f = last.from[p] ?? DEF[p];
+      v[p] = f + (last.to[p] - f) * last.ease(q);
+    }
+    el.style.transform = `translate(${v.x}px,${v.y}px) scale(${v.s * v.sx},${v.s}) rotate(${v.r}deg)`;
+    el.style.opacity = v.o;
+    el.style.filter = v.b > 0.05 ? `blur(${v.b}px)` : '';
+  }
+}
+
+// ---- timeline helpers (all timings come from the voice-over)
+const B = id => TL.beats.find(b => b.id === id);
+const W = (id, re, n = 0) => { const b = B(id); const m = TL.words.filter(w => w.beat === b.i && re.test(w.w)); return (m[n] || m[0] || { a: b.a }).a; };
+const SCENES = TL.beats.map((b, i) => {
+  const prev = TL.beats[i - 1], next = TL.beats[i + 1];
+  return { id: b.id, el: $('#s_' + b.id), a: prev ? (prev.b + b.a) / 2 : 0, b: next ? (b.b + next.a) / 2 : DUR + .01 };
+});
+const CUTS = SCENES.slice(1).map(s => s.a);
+
+function build() {
+  let a;
+  // hook
+  a = B('hook').a;
+  A('#hTag', a, .5, { y: -30, o: 0 }, { y: 0, o: 1 });
+  A('#h8', a + .05, .7, { s: 2.6, o: 0, b: 20 }, { s: 1, o: 1, b: 0 });
+  A('#h8lbl', W('hook', /years/i), .45, { y: 60, o: 0 }, { y: 0, o: 1 });
+  A('#ring', a, 1.0, { s: .4, o: 0 }, { s: 1, o: 1 });
+  // fps
+  a = B('fps').a;
+  A('#fTag', W('fps', /PS5/), .45, { y: -30, o: 0 }, { y: 0, o: 1 });
+  A('#fpsNum', a + .1, .55, { s: .3, o: 0 }, { s: 1, o: 1 }, 'outBack');
+  A('#fpsLbl', a + .35, .45, { y: 40, o: 0 }, { y: 0, o: 1 });
+  A('#graph', a + .5, .6, { o: 0 }, { o: 1 }, 'lin');
+  A('#fStill', W('fps', /still/), .3, { s: 3, o: 0, r: -24 }, { s: 1, o: 1, r: -12 }, 'outBack');
+  // title / wanted poster
+  a = B('title').a;
+  A('#poster', a, .65, { y: 900, r: 8 }, { y: 0, r: -2 }, 'outBack');
+  A('#pQ', a + .5, .5, { s: 0 }, { s: 1 }, 'outBack');
+  A('#pQ', a + 1.0, 2.6, { r: -8 }, { r: 8 }, 'inOut');
+  // rdr1
+  a = B('rdr1').a;
+  A('#rChip', a, .4, { sx: 0 }, { sx: 1 });
+  A('#rT1', W('rdr1', /Rockstar/), .55, { x: -200, o: 0, b: 10 }, { x: 0, o: 1, b: 0 });
+  A('#rT2', W('rdr1', /Rockstar/) + .15, .55, { x: 200, o: 0, b: 10 }, { x: 0, o: 1, b: 0 });
+  A('#rT3', W('rdr1', /current-gen/), .4, { y: 20, o: 0 }, { y: 0, o: 1 });
+  A('#tl60', W('rdr1', /^Sixty/i), .4, { s: 0, o: 0 }, { s: 1, o: 1 }, 'outBack');
+  A('#tl4k', W('rdr1', /^4K/), .4, { s: 0, o: 0 }, { s: 1, o: 1 }, 'outBack');
+  A('#tlhdr', W('rdr1', /^HDR/), .4, { s: 0, o: 0 }, { s: 1, o: 1 }, 'outBack');
+  // silence
+  a = B('silence').a; const inst = W('silence', /Instead/);
+  A('#sTag', a, .4, { o: 0 }, { o: 1 }, 'lin');
+  A('#arthur', W('silence', /Arthur/), .5, { s: 1.6, o: 0, b: 14 }, { s: 1, o: 1, b: 0 });
+  A('#sNext', W('silence', /next/), .4, { s: 0, o: 0 }, { s: 1, o: 1 }, 'outBack');
+  A('#sTag,#arthur,#sNext', inst, .35, { o: 1 }, { o: .12 }, 'lin');
+  A('#dots', inst + .15, .9, { o: 0, s: .6 }, { o: 1, s: 1 });
+  A('#weed', inst, 3.2, { x: -220 }, { x: 1150 }, 'lin');
+  // nate
+  a = B('nate').a;
+  A('#dNate', a, .6, { x: 1100, r: 6 }, { x: 0, r: -1.5 }, 'outCubic');
+  A('#n1', W('nate', /real/), .35, { x: -40, o: 0 }, { x: 0, o: 1 });
+  A('#n2', W('nate', /planned/), .35, { x: -40, o: 0 }, { x: 0, o: 1 });
+  A('#n3', W('nate', /^no$/), .35, { x: -40, o: 0 }, { x: 0, o: 1 });
+  // kiwi
+  a = B('kiwi').a;
+  A('#dKiwi', a, .6, { x: -1100, r: -6 }, { x: 0, r: 1.5 }, 'outCubic');
+  A('#y27', W('kiwi', /late/), .45, { s: 1.8, o: 0 }, { s: 1, o: 1 }, 'outBack');
+  // ready
+  a = B('ready').a;
+  A('#rdTag', a, .4, { y: -30, o: 0 }, { y: 0, o: 1 });
+  A('#rdFin', W('ready', /finished/), .4, { s: 1.6, o: 0 }, { s: 1, o: 1 });
+  A('#rdHold', W('ready', /sitting/), .3, { s: 3, o: 0, r: 20 }, { s: 1, o: 1, r: 8 }, 'outBack');
+  // gta
+  a = B('gta').a;
+  A('#why', a, .4, { s: 1.8, o: 0 }, { s: 1, o: 1 });
+  A('#gta', W('gta', /^GTA/), .6, { s: 2.2, o: 0, b: 26 }, { s: 1, o: 1, b: 0 });
+  A('#beam', W('gta', /^GTA/), .8, { o: 0, sx: .3 }, { o: 1, sx: 1 });
+  A('#gChip', W('gta', /launches/), .4, { sx: 0 }, { sx: 1 });
+  A('#gTag', W('gta', /spotlight|steal/), .45, { y: 30, o: 0 }, { y: 0, o: 1 });
+  // rdo
+  a = B('rdo').a;
+  A('#oTag', a, .45, { y: -30, o: 0 }, { y: 0, o: 1 });
+  A('#oT', W('rdo', /Halloween/), .55, { s: 1.7, o: 0, b: 14 }, { s: 1, o: 1, b: 0 });
+  A('#oChip', W('rdo', /through/), .4, { sx: 0 }, { sx: 1 });
+  A('#x4', W('rdo', /^four/), .45, { s: 0, o: 0 }, { s: 1, o: 1 }, 'outBack');
+  A('#oSub', W('rdo', /Strange/), .45, { y: 40, o: 0 }, { y: 0, o: 1 });
+  // cta
+  a = B('cta').a;
+  A('#cTag', a, .4, { o: 0 }, { o: 1 }, 'lin');
+  A('#cQ', a + .05, .55, { y: 60, o: 0 }, { y: 0, o: 1 });
+  A('#yes', W('cta', /sixty/i) - .2, .4, { s: 0 }, { s: 1 }, 'outBack');
+  A('#no', W('cta', /sixty/i), .4, { s: 0 }, { s: 1 }, 'outBack');
+  A('#cCom', W('cta', /Tell/), .45, { y: 40, o: 0 }, { y: 0, o: 1 });
+}
+
+// ---- world: sky palette keyframes (time, sky top/mid/bottom, far/mid/near silhouettes, night)
+const PAL = [
+  [0, '#2a1030', '#b8402a', '#f2a24a', '#6e2a2a', '#3d1717', '#140808', 0, 1],
+  [B('rdr1').a, '#3a1a3a', '#cf5a2c', '#f6c56a', '#7a3a2a', '#40201a', '#150a08', 0, 1],
+  [B('silence').a, '#141a33', '#5b2f4a', '#c0603a', '#352033', '#1c1222', '#0a070c', .45, .3],
+  [B('nate').a, '#050914', '#0f1832', '#26304f', '#1a1e33', '#0f1220', '#05060b', 1, 0],
+  [B('gta').a, '#12052a', '#5c1670', '#ff5a8a', '#3a1050', '#1c0830', '#08030f', .6, 0],
+  [B('rdo').a, '#0b0612', '#2a0f2a', '#b04a12', '#2a1220', '#140a12', '#050305', .9, 0],
+  [B('cta').a, '#24304f', '#c06a50', '#f8c27a', '#5a3a48', '#2b1c26', '#0e0a0d', .1, 1],
+];
+const hex = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+const mix = (c1, c2, p) => { const a = hex(c1), b = hex(c2); return `rgb(${a.map((v, i) => Math.round(v + (b[i] - v) * p)).join(',')})`; };
+function palette(t) {
+  let i = 0;
+  while (i < PAL.length - 1 && t >= PAL[i + 1][0]) i++;
+  const cur = PAL[i], prev = PAL[Math.max(i - 1, 0)];
+  const p = i === 0 ? 1 : E.inOut(clamp((t - cur[0] + .3) / 1.4));
+  return cur.map((v, k) => k === 0 ? v : typeof v === 'number' ? prev[k] + (v - prev[k]) * p : mix(prev[k], v, p));
+}
+
+const rnd = mulberry32(20181026);
+function ridge(base, amp, seg, flat) {
+  // a 2160px-wide skyline of flat-topped mesas whose two halves match, so it tiles seamlessly
+  const pts = [];
+  const n = Math.round(1080 / seg);
+  const hs = Array.from({ length: n }, () => (rnd() < flat ? amp * (.55 + rnd() * .45) : amp * rnd() * .35));
+  let d = `M0 1920 L0 ${base}`;
+  for (let rep = 0; rep < 2; rep++) for (let k = 0; k < n; k++) {
+    const x = rep * 1080 + k * seg, h = hs[k], nh = hs[(k + 1) % n];
+    d += ` L${x + seg * .12} ${base - h} L${x + seg * .78} ${base - h} L${x + seg} ${base - nh * .2}`;
+  }
+  return d + ' L2160 1920 Z';
+}
+$('#farP').setAttribute('d', ridge(1300, 230, 180, .45));
+$('#midP').setAttribute('d', ridge(1450, 120, 140, .3));
+$('#nearP').setAttribute('d', 'M0 1920 L0 1570 Q270 1530 540 1555 T1080 1550 Q1350 1530 1620 1555 T2160 1550 L2160 1920 Z');
+const starG = $('#stars');
+for (let i = 0; i < 140; i++) {
+  const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  c.setAttribute('cx', rnd() * 1080); c.setAttribute('cy', rnd() * 1100); c.setAttribute('r', .8 + rnd() * 2.2);
+  c.setAttribute('fill', '#fff'); c.dataset.ph = rnd() * 6.28; starG.appendChild(c);
+}
+const SVGNS = 'http://www.w3.org/2000/svg';
+const poleG = $('#poles');
+for (let i = 0; i < 2; i++) {
+  poleG.insertAdjacentHTML('beforeend', `<g transform="translate(${i * 1080},150)">
+    <rect x="300" y="1150" width="14" height="290"/><rect x="262" y="1170" width="90" height="10"/><rect x="272" y="1200" width="70" height="8"/>
+    <rect x="1000" y="1150" width="14" height="290"/><rect x="962" y="1170" width="90" height="10"/><rect x="972" y="1200" width="70" height="8"/>
+    <path d="M268 1172 Q650 1250 968 1172 M346 1172 Q690 1262 1046 1172 M278 1202 Q650 1272 978 1202" fill="none" stroke-width="3"/></g>`);
+}
+const cactiG = $('#cacti');
+[[110, 1640, 1.25], [880, 1700, 1.6]].forEach(([x, y, s]) => cactiG.insertAdjacentHTML('beforeend',
+  `<g transform="translate(${x},${y}) scale(${s})"><rect x="-16" y="-170" width="32" height="200" rx="16"/><rect x="-60" y="-110" width="26" height="80" rx="13"/><rect x="-60" y="-50" width="60" height="24" rx="12"/><rect x="34" y="-140" width="26" height="70" rx="13"/><rect x="0" y="-90" width="60" height="24" rx="12"/></g>`));
+const weedG = $('#weedG');
+for (let i = 0; i < 26; i++) {
+  const p = document.createElementNS(SVGNS, 'path'), r1 = 20 + rnd() * 25;
+  const a0 = rnd() * 6.28, a1 = a0 + 1.5 + rnd() * 2;
+  p.setAttribute('d', `M${Math.cos(a0) * r1} ${Math.sin(a0) * r1} Q${(rnd() - .5) * 40} ${(rnd() - .5) * 40} ${Math.cos(a1) * (r1 + 10)} ${Math.sin(a1) * (r1 + 10)}`);
+  weedG.appendChild(p);
+}
+// revolver cylinder chambers around the hook number
+const cyl = $('#cyl');
+for (let i = 0; i < 6; i++) {
+  const c = document.createElementNS(SVGNS, 'circle'), a = i * Math.PI / 3;
+  c.setAttribute('cx', Math.cos(a) * 62); c.setAttribute('cy', Math.sin(a) * 62); c.setAttribute('r', 20); cyl.appendChild(c);
+}
+
+const D = Array.from({ length: 70 }, () => ({ x: rnd() * 1080, y: 700 + rnd() * 1200, v: 20 + rnd() * 70, r: 1 + rnd() * 3.5, ph: rnd() * 6.28, a: .12 + rnd() * .35 }));
+const dctx = $('#dust').getContext('2d');
+function dust(t, warm) {
+  dctx.clearRect(0, 0, 1080, 1920);
+  for (const p of D) {
+    const x = ((p.x + p.v * t) % 1120 + 1120) % 1120 - 20, y = p.y + Math.sin(t * .8 + p.ph) * 18;
+    dctx.fillStyle = warm ? `rgba(255,214,150,${p.a})` : `rgba(200,210,255,${p.a * .7})`;
+    dctx.beginPath(); dctx.arc(x, y, p.r, 0, 6.2832); dctx.fill();
+  }
+}
+const gctx = $('#grain').getContext('2d'), gimg = gctx.createImageData(540, 960);
+function grain(fr) {
+  const r = mulberry32(fr * 7919 + 1), d = gimg.data;
+  for (let i = 0; i < d.length; i += 4) { const v = r() * 255; d[i] = d[i + 1] = d[i + 2] = v; d[i + 3] = 255; }
+  gctx.putImageData(gimg, 0, 0);
+}
+
+function world(t) {
+  const [, s0, s1, s2, cf, cm, cn, night, sun] = palette(t);
+  $('#sk0').setAttribute('stop-color', s0); $('#sk1').setAttribute('stop-color', s1); $('#sk2').setAttribute('stop-color', s2);
+  $('#farP').setAttribute('fill', cf); $('#midP').setAttribute('fill', cm); $('#rider').setAttribute('fill', cn);
+  $('#nearP').setAttribute('fill', cn); poleG.setAttribute('fill', cn); poleG.setAttribute('stroke', cn); cactiG.setAttribute('fill', cn);
+  $('#far').style.transform = `translateX(${-(t * 8) % 1080}px)`;
+  $('#mid').style.transform = `translateX(${-(t * 18) % 1080}px)`;
+  $('#near').style.transform = `translateX(${-(t * 40) % 1080}px)`;
+  poleG.style.transform = `translateX(${-(t * 70) % 1080}px)`;
+  cactiG.style.transform = `translateX(${-((t * 110) % 2200) + 1100}px)`;
+  $('#rider').setAttribute('transform', `translate(${560 + Math.sin(t * .4) * 30},${1335 - Math.abs(Math.sin(t * 4)) * 4}) scale(1.6)`);
+  const sy = 1150 + t * 4;
+  ['#sun', '#sunGlow'].forEach(s => { $(s).setAttribute('cy', sy); $(s).style.opacity = sun; });
+  $('#stars').style.opacity = night;
+  $$('#stars circle').forEach((c, i) => c.style.opacity = .5 + .5 * Math.sin(t * 3 + +c.dataset.ph));
+  const gta = t >= B('gta').a - .5 && t < B('rdo').a - .5;
+  $('#moon').style.opacity = $('#moonGlow').style.opacity = gta ? 0 : night;
+  const halloween = t >= B('rdo').a - .5 && t < B('cta').a - .3;
+  $('#moon').setAttribute('fill', halloween ? '#ffb347' : '#f3ecd8');
+  dust(t, night < .5);
+}
+
+// ---- captions
+const KEY = /^(30|60|FPS|4K|HDR|8|2026|2027|GTA|VI|4X|NEVER|REAL|SILENCE|NOVEMBER|NOV|RDR2)$/i;
+let capIdx = -2;
+function captions(t) {
+  const i = TL.caps.findIndex(c => t >= c.a - .02 && t < c.b);
+  const el = $('#capIn');
+  if (i !== capIdx) {
+    capIdx = i;
+    el.innerHTML = i < 0 ? '' : TL.caps[i].words.map(w => `<span class="${w.w.split(/\s+/).some(x => KEY.test(x.replace(/\W/g, ''))) ? 'key' : ''}">${w.w.replace(/[,.!?]+$/, '').replace(/ /g, '&nbsp;')}</span>`).join(' ');
+    if (i >= 0) {
+      let fs = 100; el.style.fontSize = fs + 'px';
+      while ((el.scrollHeight > 230 || el.scrollWidth > 900) && fs > 40) { fs -= 4; el.style.fontSize = fs + 'px'; }
+    }
+  }
+  if (i < 0) return;
+  const c = TL.caps[i];
+  [...el.children].forEach((s, k) => s.classList.toggle('on', t >= c.words[k].a - .03 && (t < c.words[k].b || k === c.words.length - 1) && !s.classList.contains('key')));
+  const p = clamp((t - c.a) / .16);
+  el.style.transform = `scale(${.78 + .22 * E.outBack(p)})`;
+}
+
+// ---- per-scene live bits
+function live(t) {
+  const fr = Math.round(t * FPS);
+  $('#cyl').setAttribute('transform', `rotate(${t * 40})`);
+  $('#h8').textContent = Math.max(0, Math.min(8, Math.floor(1 + 7 * E.outCubic(clamp((t - B('hook').a) / 1.6)))));
+  // fps counter jitters but never escapes 30
+  $('#fpsNum').textContent = t > B('fps').a + .7 && hash(fr) < .12 ? '29' : '30';
+  const pts = []; for (let x = 0; x <= 860; x += 20) pts.push(`${x},${75 + (hash(x + fr * .2 | 0) - .5) * 10}`);
+  $('#gline').setAttribute('points', pts.join(' '));
+  // wanted poster flicker
+  $('#pW4').textContent = 'LAST SEEN: ' + (t > B('title').a + 1.3 ? 'NEVER' : '???');
+  $('#weedG').setAttribute('transform', `rotate(${t * 400})`);
+  $('#weed').style.translate = `0 ${-Math.abs(Math.sin(t * 5)) * 40}px`;
+  // kiwi timeline
+  const k0 = W('kiwi', /slip/), k1 = W('kiwi', /2027/) + .3;
+  const kp = E.inOut(clamp((t - k0) / (k1 - k0)));
+  $('#tlfill').style.width = 640 * kp + 'px'; $('#tlpin').style.left = 640 * kp + 'px';
+  // build progress
+  const r0 = B('ready').a + .2, r1 = W('ready', /finished/);
+  const rp = E.outCubic(clamp((t - r0) / (r1 - r0)));
+  $('#pct').textContent = Math.round(rp * 100) + '%'; $('#barIn').style.width = rp * 100 + '%';
+  $('#beam').style.rotate = `${Math.sin(t * 1.4) * 6}deg`;
+  $('#x4').style.scale = t > W('rdo', /^four/) + .5 ? 1 + .04 * Math.sin(t * 8) : 1;
+  const pulse = 1 + .05 * Math.max(0, Math.sin(t * 7));
+  $('#yes').style.scale = t > B('cta').a + 1.5 ? pulse : 1;
+  $('#live').style.opacity = .35 + .65 * (Math.sin(t * 6) > 0);
+}
+
+function render(t) {
+  const fr = Math.round(t * FPS);
+  for (const s of SCENES) s.el.style.visibility = (t >= s.a && t < s.b) ? 'visible' : 'hidden';
+  // scene transitions: incoming punch-in, outgoing quick zoom-out
+  for (const s of SCENES) {
+    const pin = clamp((t - s.a) / .22), pout = clamp((t - (s.b - .14)) / .14);
+    s.el.style.transform = `scale(${(1.08 - .08 * E.outCubic(pin)) * (1 + .12 * pout)})`;
+    s.el.style.opacity = Math.min(s.a === 0 ? 1 : .2 + .8 * pin, 1 - pout);
+  }
+  applyTracks(t);
+  if (!document.body.classList.contains('overlay')) world(t);
+  live(t);
+  captions(t);
+  grain(fr);
+  let sx = 0, sy = 0, fl = 0;
+  for (const c of CUTS) if (t >= c && t < c + .4) {
+    const k = 14 * Math.exp(-(t - c) * 12);
+    sx += (hash(fr * 13.1 + c) - .5) * 2 * k; sy += (hash(fr * 7.7 + c * 3) - .5) * 2 * k;
+    fl = Math.max(fl, .28 * Math.exp(-(t - c) * 14));
+  }
+  const sc = SCENES.find(s => t >= s.a && t < s.b) || SCENES[SCENES.length - 1];
+  $('#cam').style.transform = `translate(${sx}px,${sy}px) scale(${1 + .025 * clamp((t - sc.a) / (sc.b - sc.a))})`;
+  $('#flash').style.opacity = fl;
+  $('#prog').style.width = (100 * clamp(t / DUR)) + '%';
+}
+
+window.render = render;
+window.__ready = (async () => {
+  try { await document.fonts.ready; } catch (e) {}
+  build();
+  render(0);
+  return true;
+})();
+
+const qs = new URLSearchParams(location.search);
+if (!navigator.webdriver) {
+  window.__ready.then(() => {
+    if (qs.has('t')) { render(+qs.get('t')); return; }
+    const start = performance.now();
+    const loop = () => { render(((performance.now() - start) / 1000) % DUR); requestAnimationFrame(loop); };
+    requestAnimationFrame(loop);
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+{
+  "title": "Where Is the RDR2 Next-Gen Upgrade?",
+  "voice": "am_michael",
+  "target_seconds": 61.0,
+  "lead_in": 0.35,
+  "tail": 1.2,
+  "beats": [
+    {
+      "id": "hook",
+      "text": "Red Dead Redemption 2 turns eight years old this month."
+    },
+    {
+      "id": "fps",
+      "text": "And on PS5 and Xbox Series X, it is still stuck at thirty frames per second."
+    },
+    {
+      "id": "title",
+      "text": "So where is the next-gen upgrade? Here's what we actually know."
+    },
+    {
+      "id": "rdr1",
+      "text": "Last December, Rockstar gave the original Red Dead Redemption a proper current-gen release. Sixty FPS. 4K. HDR."
+    },
+    {
+      "id": "silence",
+      "text": "Fans assumed Arthur Morgan was next. Instead... silence."
+    },
+    {
+      "id": "nate",
+      "text": "Insider NateTheHate says the upgrade is real, and was planned for this year. But he has no update on timing."
+    },
+    {
+      "id": "kiwi",
+      "text": "Another insider, Kiwi Talkz, claims it could slip all the way to late 2027."
+    },
+    {
+      "id": "ready",
+      "text": "And a June report says it may already be finished... and Rockstar is simply sitting on it."
+    },
+    {
+      "id": "gta",
+      "text": "Why? GTA Six. It launches this November, and Rockstar won't let anything steal that spotlight."
+    },
+    {
+      "id": "rdo",
+      "text": "Until then, Red Dead Online's Halloween event is live through November second, with four times rewards on Strange Tales of the West."
+    },
+    {
+      "id": "cta",
+      "text": "Would you buy RDR2 again for sixty FPS? Tell me in the comments."
+    }
+  ],
+  "spoken_to_caption": {
+    "thirty frames per second": "30 FPS",
+    "Sixty FPS": "60 FPS",
+    "sixty FPS": "60 FPS",
+    "GTA Six": "GTA VI",
+    "four times": "4X",
+    "November second": "Nov 2",
+    "eight years": "8 years",
+    "Red Dead Redemption 2": "Red Dead Redemption 2",
+    "Red Dead Redemption": "Red Dead Redemption",
+    "Xbox Series X": "Xbox Series X",
+    "Arthur Morgan": "Arthur Morgan",
+    "Kiwi Talkz": "Kiwi Talkz",
+    "Red Dead Online's": "Red Dead Online's",
+    "Strange Tales of the West": "Strange Tales of the West",
+    "next-gen upgrade": "next-gen upgrade",
+    "current-gen release": "current-gen release",
+    "late 2027": "late 2027"
+  }
+}
